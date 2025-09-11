@@ -139,11 +139,17 @@ function images() {
 }
 
 // Copy webfonts
-// function webfonts() {
-//     return src(paths.webfonts.src)
-//         .pipe(dest(paths.webfonts.dest))
-//         .pipe(browserSync.stream());
-// }
+function webfonts() {
+    return src(paths.webfonts.src)
+        .pipe(dest(paths.webfonts.dest))
+        .pipe(browserSync.stream());
+}
+exports.default = series(
+    clean,
+    parallel(html, scss, css, js, images, webfonts), // ✅ added webfonts
+    serve
+);
+
 
 // Serve + watch
 function serve() {
@@ -156,14 +162,15 @@ function serve() {
     watch(paths.css.src, css);
     watch(paths.js.src, js);
     watch(paths.img.src, images);
+
 }
 
 // Default task
-exports.default = series(
-    clean,
-    parallel(html, scss, css, js, images),
-    serve
-);
+// exports.default = series(
+//     clean,
+//     parallel(html, scss, css, js, images),
+//     serve
+// );
 
 
 // if need webfonts ... to be add

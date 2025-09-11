@@ -86,14 +86,15 @@
 // }
 
 .header-item {
-    color: var(--heading-color) !important;
-    font-family: var(--body-font);
-    font-size: 16px !important;
-    font-weight: 400;
-    line-height: 160%;
+  color: var(--heading-color) !important;
+  font-family: var(--body-font);
+  font-size: 16px !important;
+  font-weight: 400;
+  line-height: 160%;
 }
 
 @media (min-width: 1700px) {
+
   .container,
   .container-xxl {
     max-width: 1620px;

@@ -1,1 +1,48 @@
 @use '../utils/' as *;
+
+.hero-section {
+    background: #F5F7FA;
+    margin-top: 84px;
+
+    .hero-section-wrapper {
+        .hero-content {
+            text-align: center;
+
+            .hero-subtitle {
+                span {
+                    color: rgb(var(--heading-color));
+                    font-family: var(--heading-font);
+                    font-size: 28px;
+                    font-weight: 600;
+                    line-height: 160%;
+                }
+
+
+                p {
+                    color: rgb(var(--theme-color));
+                    font-family: var(--body-font);
+                    font-size: 16px;
+                    font-weight: 600;
+                    letter-spacing: 1.92px;
+                }
+            }
+
+            .btn-shop {
+                padding: 18px 32px;
+                display: inline-block;
+                background: rgb(var(--theme-color));
+                color: rgb(var(--white));
+                text-align: center;
+                font-family: var(--body-font);
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 160%;
+                border-radius: 4px;
+            }
+            .hero-title {
+                margin-top: 20px;
+                margin-bottom: 42px;
+            }
+        }
+    }
+}

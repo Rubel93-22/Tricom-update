@@ -8,7 +8,7 @@ const through2 = require('through2');
 const Vinyl = require('vinyl');
 const path = require('path');
 
-// Helpers
+// Helpers 
 function titleCase(str) {
     return String(str)
         .replace(/^_/, '')              // remove leading underscore
@@ -26,12 +26,12 @@ function cleanFileName(basename) {
 // Paths
 const paths = {
     html: {
-        pages: 'src/html/pages/*.html',       // <-- loop these
+        pages: 'src/html/pages/*.html',
         dest: 'dist/',
         watch: 'src/html/**/*.html'
     },
     scss: {
-        src: 'src/assets/scss/main.scss',
+        src: 'src/assets/scss/main.scss', // adjust if multiple entry points needed
         dest: 'dist/assets/css/',
         watch: 'src/assets/scss/**/*.scss'
     },
@@ -74,18 +74,16 @@ function html() {
                 const pageRelPath = path.relative(
                     path.join(pageFile.base, '..'), // src/html/
                     pageFile.path                   // src/html/pages/<file>
-                ); // e.g. 'pages/_index.html' or 'pages/about.html'
+                );
 
-                const basename = path.basename(pageFile.path);           // '_index.html'
-                const outBase = cleanFileName(basename);                 // 'index.html'
-                const title = titleCase(basename);                       // 'Index' or 'About Us'
+                const basename = path.basename(pageFile.path);
+                const outBase = cleanFileName(basename);
+                const title = titleCase(basename);
 
-                // Create a VIRTUAL wrapper file that includes base with params
-                // Section = the original page file relative path (e.g. 'pages/_index.html')
                 const wrapper = new Vinyl({
                     cwd: pageFile.cwd,
                     base: pageFile.base,
-                    path: path.join(pageFile.base, outBase), // output name at this stage
+                    path: path.join(pageFile.base, outBase),
                     contents: Buffer.from(
                         `@@include('html/layouts/_template-top.html', {\n` +
                         `  "title": "${title}",\n` +
@@ -95,14 +93,13 @@ function html() {
                         `  "section": "${pageRelPath.replace(/\\/g, '/')}"\n` +
                         `})\n`
                     )
-
                 });
 
                 this.push(wrapper);
                 cb();
             })
         )
-        .pipe(fileInclude({ prefix: '@@', basepath: 'src' })) // basepath 'src' so our wrapper include works
+        .pipe(fileInclude({ prefix: '@@', basepath: 'src' }))
         .pipe(dest(paths.html.dest))
         .pipe(browserSync.stream());
 }
@@ -144,12 +141,6 @@ function webfonts() {
         .pipe(dest(paths.webfonts.dest))
         .pipe(browserSync.stream());
 }
-exports.default = series(
-    clean,
-    parallel(html, scss, css, js, images, webfonts), // ✅ added webfonts
-    serve
-);
-
 
 // Serve + watch
 function serve() {
@@ -162,15 +153,12 @@ function serve() {
     watch(paths.css.src, css);
     watch(paths.js.src, js);
     watch(paths.img.src, images);
-
+    watch(paths.webfonts.src, webfonts);
 }
 
 // Default task
-// exports.default = series(
-//     clean,
-//     parallel(html, scss, css, js, images),
-//     serve
-// );
-
-
-// if need webfonts ... to be add
+exports.default = series(
+    clean,
+    parallel(html, scss, css, js, images, webfonts),
+    serve
+);
